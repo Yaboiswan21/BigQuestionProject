@@ -1,0 +1,80 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who Wants to Be a Millionaire?</title>
+    <style>
+        body { text-align: center; font-family: Arial, sans-serif; background-color: black; color: white; }
+        .question { font-size: 24px; margin: 20px; }
+        .button { padding: 10px 20px; margin: 10px; font-size: 18px; background: blue; color: white; border: none; cursor: pointer; }
+        .button:hover { background: darkblue; }
+        .title-image { width: 50%; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <img src="title_screen.jpg" alt="Who Wants to Be a Millionaire" class="title-image">
+    <div id="game">
+        <button id="start" class="button">Start Game</button>
+    </div>
+    
+    <audio id="bgMusic" src="suspensemusic.mp3" loop></audio>
+    <audio id="suspenseMusic" src="suspensemusic.mp3"></audio>
+    <audio id="correctSound" src="correctanswer.mp3"></audio>
+    <audio id="incorrectSound" src="incorrectanswer.mp3"></audio>
+    
+    <script>
+        const questions = [
+            {"question": "Should we stop treating Supreme Court justices like kings with lifetime rule?", "options": ["Yes", "No"], "correct": 0},
+            {"question": "Would term limits help prevent outdated and biased rulings?", "options": ["Yes", "No"], "correct": 0},
+            {"question": "Do justices really need to serve longer than most people’s careers?", "options": ["Yes", "No"], "correct": 1},
+            {"question": "If term limits keep the court fair, shouldn’t we have them already?", "options": ["Yes", "No"], "correct": 0},
+            {"question": "Should justices be required to leave before their ideas expire?", "options": ["Yes", "No"], "correct": 0},
+            {"question": "Would fresh perspectives make the Supreme Court more just?", "options": ["Yes", "No"], "correct": 0},
+            {"question": "If the president has term limits, shouldn’t the Supreme Court have them too?", "options": ["Yes", "No"], "correct": 0},
+            {"question": "Does staying in power for decades make justices less accountable?", "options": ["Yes", "No"], "correct": 0},
+            {"question": "Should we stop treating the Supreme Court like a monarchy?", "options": ["Yes", "No"], "correct": 0},
+            {"question": "Is it time for a change in the Supreme Court?", "options": ["Yes", "No"], "correct": 0},
+        ];
+        
+        let currentQuestion = -1;
+        let attemptsLeft = 5;
+        
+        document.getElementById("start").addEventListener("click", startGame);
+        
+        function startGame() {
+            document.getElementById("bgMusic").play();
+            nextQuestion();
+        }
+        
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= questions.length) {
+                document.getElementById("game").innerHTML = "<h2>You won!</h2>";
+                return;
+            }
+            
+            const q = questions[currentQuestion];
+            let html = `<div class='question'>${q.question}</div>`;
+            q.options.forEach((option, index) => {
+                html += `<button class='button' onclick='checkAnswer(${index})'>${option}</button>`;
+            });
+            document.getElementById("game").innerHTML = html;
+        }
+        
+        function checkAnswer(choice) {
+            const correct = questions[currentQuestion].correct;
+            if (choice === correct) {
+                document.getElementById("correctSound").play();
+                nextQuestion();
+            } else {
+                attemptsLeft--;
+                document.getElementById("incorrectSound").play();
+                if (attemptsLeft === 0) {
+                    document.getElementById("game").innerHTML = "<h2>Game Over</h2>";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
